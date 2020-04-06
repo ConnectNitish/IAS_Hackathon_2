@@ -1,5 +1,17 @@
 # IAS_Hackathon_2
 
+For Kafka Server : 
+------------------
+1. Navigate to respective Kafka Folder 
+
+2. To run zookepper
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+3.To run Kafka
+bin/kafka-server-start.sh config/server.properties
+
+------------------------------
+
 For Running Request Manger.py 
 
 python3 requestManager/request_manager.py a b c d 127.0.0.1:9092
