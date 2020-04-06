@@ -16,7 +16,9 @@ For Kafka Server :
 
 Setting Up Docker :
 
+<br />
 >curl -fsSL https://get.docker.com -o get-docker.sh
+<br />
 >sudo sh get-docker.sh
 
 
