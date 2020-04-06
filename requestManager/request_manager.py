@@ -22,7 +22,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'json', 'png', 'jpg', 'jpeg', 'gif', 'zip'])
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.deployment_file_location = '../deployment/to_deploy_folder/to_deploy_file.json'
+app.deployment_file_location = 'deployment/to_deploy_folder'
 
 # service Deployemnt URL 
 sdURL = sys.argv[1]
@@ -466,8 +466,22 @@ def add_deployment_details():
     response[key_port_number] = input_port_number
     response[key_service_type] = input_service_type
 
-    # with open(app.deployment_file_location, 'w') as fp:
-    #     json.dump(response, fp)
+    url_path_counter = app.deployment_file_location + "/to_deploy_file_Counter.txt"
+    request_number = None
+    try:
+        with open(url_path_counter, 'r') as fp:
+            request_number = int(fp.read())
+    except FileNotFoundError:
+        print("File Not Found")
+        request_number = 0
+        pass
+
+    url_path = app.deployment_file_location + "/to_deploy_file_"+ str(request_number + 1) +".json"
+    with open(url_path, 'a+') as fp:
+        json.dump(response, fp)
+
+    with open(url_path_counter, 'w') as fp:
+        fp.write(str(request_number + 1))
 
     is_deployment_done = True
     response["deployment_done"] = is_deployment_done
