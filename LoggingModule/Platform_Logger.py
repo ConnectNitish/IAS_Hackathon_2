@@ -21,6 +21,10 @@ class Platform_Logger:
             print (item)
         print("Final End")
 
+    def initiate_logging(self,topic_name_list,server_id):
+        for topic_name in topic_name_list:            
+            th.Thread(target=self.consume_topic, args=(topic_name,server_id)).start()
+
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print ("Invalid argument format\n Correct usage:python3 [filename][IP Address][Port Number]")
@@ -28,5 +32,5 @@ if __name__ == '__main__':
     server_IP,server_port = str(sys.argv[1]),str(sys.argv[2])
     server_id = server_IP+":"+server_port
     obj_Server = Platform_Logger()
-    topic_name = "Logging"
-    obj_Server.consume_topic(topic_name,server_id)
+    topic_name_list = ["Logging","Request_Manager"]
+    obj_Server.initiate_logging(topic_name_list,server_id)

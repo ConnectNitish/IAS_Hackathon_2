@@ -466,14 +466,14 @@ def add_deployment_details():
     response[key_port_number] = input_port_number
     response[key_service_type] = input_service_type
 
-    with open(app.deployment_file_location, 'w') as fp:
-        json.dump(response, fp)
+    # with open(app.deployment_file_location, 'w') as fp:
+    #     json.dump(response, fp)
 
     is_deployment_done = True
     response["deployment_done"] = is_deployment_done
 
     print('Logging Request to Logger For Success Deployment')
-    prepare_and_send_log_message("Request_Manager","Start_Deployment",response)
+    prepare_and_send_log_message("Logging","Start_Deployment",response)
 
     print(response)
 
