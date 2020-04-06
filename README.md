@@ -5,9 +5,11 @@ For Kafka Server :
 1. Navigate to respective Kafka Folder 
 
 2. To run zookepper
+<br />
 bin/zookeeper-server-start.sh config/zookeeper.properties
 
 3.To run Kafka
+<br />
 bin/kafka-server-start.sh config/server.properties
 
 ------------------------------
