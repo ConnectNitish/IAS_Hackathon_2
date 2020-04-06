@@ -6,13 +6,24 @@ For Kafka Server :
 
 2. To run zookepper
 <br />
-bin/zookeeper-server-start.sh config/zookeeper.properties
+>bin/zookeeper-server-start.sh config/zookeeper.properties
 
 3.To run Kafka
 <br />
-bin/kafka-server-start.sh config/server.properties
+>bin/kafka-server-start.sh config/server.properties
 
 ------------------------------
+
+Setting Up Docker :
+
+>curl -fsSL https://get.docker.com -o get-docker.sh
+>sudo sh get-docker.sh
+
+
+
+
+------------------------------
+
 
 For Running Request Manger.py 
 
