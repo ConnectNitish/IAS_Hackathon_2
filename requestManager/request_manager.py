@@ -434,7 +434,6 @@ def prepare_and_send_log_message(topic_name,key,value):
 @app.route('/Deployment_Interface')
 def Deployment_Interface():
     is_deployment_done = False
-    
     response = {}
     response["deployment_done"] = is_deployment_done
     print(response)
@@ -444,16 +443,16 @@ def Deployment_Interface():
 
 @app.route('/Live_Service_Instances')
 def getServiceInstancesDetails():
-    response = {}
+    # response = {}
 
-    response['all_live_service'] = [
-    {
-    'serviceName':'deploymentService','instances':['127.0.0.1:1234','127.0.0.1:23456']
-    },
-    {
-    'serviceName':'SchedulerService','instances':['127.0.0.1:99999','127.0.0.1:99998']
-    },
-    ]
+    # response['all_live_service'] = [
+    # {
+    # 'serviceName':'deploymentService','instances':['127.0.0.1:1234','127.0.0.1:23456']
+    # },
+    # {
+    # 'serviceName':'SchedulerService','instances':['127.0.0.1:99999','127.0.0.1:99998']
+    # },
+    # ]
 
     r=requests.get(url="http://0.0.0.0:8001/get_all_services")
     # print(r)
