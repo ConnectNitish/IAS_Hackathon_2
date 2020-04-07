@@ -29,9 +29,9 @@ class Platform_Logger:
             print("****************8")
             print(item)
             print(item.key)
-            if item.key.contains("warning"):
+            if "warning" in item.key:
                 log_instance.warning(item.key + item.value)
-            elif item.key.contains("info"):
+            elif "info" in item.key::
                 log_instance.info(item.key + item.value)
             else:
                 log_instance.info(item.key + item.value)                
