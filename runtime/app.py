@@ -5,6 +5,7 @@ import sys
 import json
 import os
 import socket
+import requests
 
 app = Flask(__name__)
 app.debug = True
@@ -145,11 +146,10 @@ def get_ip_and_port(socket):
     return ip_port_temp[0],ip_port_temp[1]
 
 if __name__=='__main__':
-    
     get_Server_Configuration()
     runtime_application_ip,runtime_application_port = get_ip_and_port(runtime_application_ip_port)
 
     if __debug__:
         print(" runtime_application_ip,runtime_application_port ",runtime_application_ip,runtime_application_port)
 
-    app.run(host="127.0.0.1",debug=True,port=3000,threaded=True)
+    app.run(host=runtime_application_ip,debug=False,port=int(runtime_application_port),threaded=True)

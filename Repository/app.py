@@ -76,7 +76,41 @@ def get_running_ip(module):
         service_details_ip = None
     return service_details_ip
 
+@app.route('/download/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    uploads = app.root_path + "/download/" + filename
+    # print(uploads)
+    # uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_file(uploads, as_attachment=True)
+
+global kafka_IP_plus_port
+global repository_ip_port
+
+def get_Server_Configuration():
+    global kafka_IP_plus_port 
+    kafka_IP_plus_port = get_running_ip("Kafka_Service")
+
+    if __debug__:
+        print(" Kafka IP and Port",kafka_IP_plus_port)
+    
+    global repository_ip_port
+    repository_ip_port = get_running_ip("Repository_Service")
+    
+    if __debug__:
+        print(" repository_ip_port ",repository_ip_port)
+
+def get_ip_and_port(socket):
+    ip_port_temp = socket.split(':')
+    print(ip_port_temp)
+    return ip_port_temp[0],ip_port_temp[1]
+
 registry_object = Registry(app.registry_config_file)
 
 if __name__=='__main__':
-    app.run(host="127.0.0.1",debug=True,port=9939,threaded=True)
+    get_Server_Configuration()
+    repository_ip,repository_port = get_ip_and_port(repository_ip_port)
+
+    if __debug__:
+        print(" repository_ip,repository_port ",repository_ip,repository_port)
+
+    app.run(host=repository_ip,debug=False,port=int(repository_port),threaded=True)

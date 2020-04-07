@@ -6,25 +6,43 @@ import threading as th
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
 from kafka.errors import KafkaError
+from logzero import logger
+import logging
+
+from logzero import setup_logger
+# logger1 = setup_logger(name="mylogger1", logfile="/LoggingModule/test-logger1.log", level=logging.INFO)
+# logger2 = setup_logger(name="mylogger2", logfile="/tmp/test-logger2.log", level=logging.INFO)
+# logger3 = setup_logger(name="mylogger3", logfile="/tmp/test-logger3.log", level=logging.INFO)
+
 
 debug = True
 
 class Platform_Logger:
 
-    def consume_topic(self,function_name,server_id):
+    def consume_topic(self,function_name,server_id,log_instance):
         print("---------Consuming Start")
         # consumer = kafka_api_obj.consume_topic(function_name,server_id,server_id)
         consumer = KafkaConsumer(function_name,group_id=server_id,bootstrap_servers=server_id,key_deserializer=lambda m: json.loads(m.decode('utf-8')),value_deserializer=lambda m: json.loads(m.decode('utf-8')))
         print("Consuming End")
         print(consumer)
         for item in consumer:
-            print (item)
+            print("****************8")
+            print(item)
+            print(item.key)
+            if item.key.contains("warning"):
+                log_instance.warning(item.key + item.value)
+            elif item.key.contains("info"):
+                log_instance.info(item.key + item.value)
+            else:
+                log_instance.info(item.key + item.value)                
+            print(item.value)
         print("Final End")
 
     def initiate_logging(self,topic_name_list,server_id):
-        for topic_name in topic_name_list:            
-            th.Thread(target=self.consume_topic, args=(topic_name,server_id)).start()
-
+        for topic_name in topic_name_list:
+            log_path = os.getcwd() + "/LoggingModule/"+topic_name+".log"
+            log_instance = setup_logger(name=topic_name, logfile=log_path, maxBytes=3*1e6, level=logging.INFO)
+            th.Thread(target=self.consume_topic, args=(topic_name,server_id,log_instance)).start()
 
 
 global kafka_IP_plus_port
