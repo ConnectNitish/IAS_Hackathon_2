@@ -41,6 +41,7 @@ def start_module(module_name):
     response = {}
     try:
         module_port = get_free_port()
+        print("module_port: ",module_port)
         container_id = ""
         os.system("sudo docker run -p {}:{} -d {} > output.txt".format(module_port,module_port_int,module_name))
 
@@ -91,7 +92,7 @@ def stop_module(module_name):
 
         print("output: ",container_id)
 
-        os.system("echo {} | sudo docker ps -a".format(PASSWRD))
+        os.system("sudo docker ps -a")
         print('{} module stoped'.format(module_name))
 
         return "success"
