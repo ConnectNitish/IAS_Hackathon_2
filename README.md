@@ -23,22 +23,30 @@ Setting Up Docker :
 
 ------------------------------
 
+>> NEW ( All Module will be up , not needed to run old script if ran )
+python3 boot_strap.py 127.0.0.1:9939
+
+------------------------------
+>> OLD ( For Individual Module )
+
+For Running Repository.py 
+
+python3 Repository/app.py 127.0.0.1:9939
 
 For Running Request Manger.py 
 
-python3 requestManager/request_manager.py a b c d 127.0.0.1:9092
-
+python3 requestManager/request_manager.py 127.0.0.1:9939
 
 For Making Up Logging File 
 
-python3 LoggingModule/Platform_Logger.py 127.0.0.1 9092
-
------------------------------
+python3 LoggingModule/Platform_Logger.py 127.0.0.1:9092
 
 For Running Load Balancer 
 
-Go into LoadBalancer Folder : 
+python3 LoadBalancer/LoadBalancer.py 127.0.0.1:9939
 
-python3 LoadBalancer.py 127.0.0.1:9092 localhost 8001
+For Deployment Manager
+
+python3 deployer/app.py 127.0.0.1:9939
 
 
