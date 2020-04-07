@@ -30,11 +30,11 @@ class Platform_Logger:
             print(item)
             print(item.key)
             if "warning" in item.key:
-                log_instance.warning(item.key + item.value)
-            elif "info" in item.key::
-                log_instance.info(item.key + item.value)
+                log_instance.warning(item.key + "\t" + item.value)
+            elif "info" in item.key:
+                log_instance.info(item.key + "\t" + item.value)
             else:
-                log_instance.info(item.key + item.value)                
+                log_instance.info(item.key + "\t" + item.value)                
             print(item.value)
         print("Final End")
 
