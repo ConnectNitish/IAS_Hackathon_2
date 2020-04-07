@@ -21,9 +21,6 @@ Setting Up Docker :
 <br />
 >sudo sh get-docker.sh
 
-
-
-
 ------------------------------
 
 
@@ -36,6 +33,12 @@ For Making Up Logging File
 
 python3 LoggingModule/Platform_Logger.py 127.0.0.1 9092
 
+-----------------------------
 
+For Running Load Balancer 
+
+Go into LoadBalancer Folder : 
+
+python3 LoadBalancer.py 127.0.0.1:9092 localhost 8001
 
 
