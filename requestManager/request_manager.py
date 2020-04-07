@@ -22,18 +22,17 @@ ALLOWED_EXTENSIONS = set(['txt', 'json', 'png', 'jpg', 'jpeg', 'gif', 'zip'])
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.deployment_file_location = 'deployment/to_deploy_folder'
+
 
 # service Deployemnt URL 
-sdURL = sys.argv[1]
-rabbitIp = sys.argv[2]
-kafka_IP_plus_port = sys.argv[5]
-print(" Kafka IP and Port",kafka_IP_plus_port)
+# sdURL = sys.argv[1]
+# rabbitIp = sys.argv[2]
 
 ###################################################
 # logger = Logger("amqp://admin:admin@"+rabbitIp+"//")
 # my_logger = logging.getLogger('test_logger')
 # my_logger.setLevel(logging.DEBUG)
+
 
 # # rabbitmq handler
 # logHandler = Logger("amqp://admin:admin@"+rabbitIp+"//")
@@ -47,7 +46,7 @@ loaddata = response.json()
 ipd = loaddata['ip']
 portd = loaddata['port']
 URLd = "http://"+ipd+":"+str(portd)+"/db_interaction"'''
-
+'''
 @app.route('/health')
 def health():
     return "OK"
@@ -415,7 +414,7 @@ def schedule_model_1():
 @app.route('/login')
 def login():
     return render_template('login.html')
-
+'''
 
 #----------------------------------------------------
 
@@ -428,7 +427,12 @@ def login():
 #   print(" Start Producing ")
 #   kafka_api_obj.produce_topic(topic_name,client_id,reply,server_id)
 
-def prepare_and_send_log_message(topic_name,key,value):
+
+@app.route('/')
+def landingPage():
+    return render_template('index.html')
+
+def prepare_and_send_log_message(topic_name,key,value,kafka_IP_plus_port):
     kafka_api_obj.produce_topic(topic_name,key,value,kafka_IP_plus_port)
 
 @app.route('/Deployment_Interface')
@@ -438,7 +442,7 @@ def Deployment_Interface():
     response["deployment_done"] = is_deployment_done
     print(response)
     print('Logging Request to Logger')
-    prepare_and_send_log_message("Request_Manager","Deployment_Interface","Call to Page")
+    prepare_and_send_log_message("Request_Manager","Deployment_Interface","Call to Page",kafka_IP_plus_port)
     return render_template('Deployment_Interface.html',data=response)
 
 @app.route('/Live_Service_Instances')
@@ -453,8 +457,8 @@ def getServiceInstancesDetails():
     # 'serviceName':'SchedulerService','instances':['127.0.0.1:99999','127.0.0.1:99998']
     # },
     # ]
-
-    r=requests.get(url="http://0.0.0.0:8001/get_all_services")
+    load_balancer_ip_port = get_ip_port("LoadBalancer_Service")
+    r=requests.get(url="http://"+load_balancer_ip_port+"/get_all_services")
     # print(r)
     data = r.json()
     print("response from Rest API")
@@ -513,7 +517,7 @@ def add_deployment_details():
     response["deployment_done"] = is_deployment_done
 
     print('Logging Request to Logger For Success Deployment')
-    prepare_and_send_log_message("Logging","Start_Deployment",response)
+    prepare_and_send_log_message("Logging","Start_Deployment",response,kafka_IP_plus_port)
 
     print(response)
 
@@ -522,7 +526,7 @@ def add_deployment_details():
 
 
 #----------------------------------------------------
-
+'''
 @app.route('/login_1',methods=['POST','GET'])
 def login_1():
 
@@ -533,8 +537,6 @@ def login_1():
     data = r.json()
     session['uid'] = data[0][0]
     return redirect(url_for('.login'))
-
-
 
 @app.route("/signup")
 def signup():
@@ -836,7 +838,47 @@ def platform_db_initialization():
 def logout():
     session.pop('uid', None)
     return render_template('index.html')
+'''
+global kafka_IP_plus_port
+global request_manager_ip_port
+
+kafka_IP_plus_port = None
+request_manager_ip_port = None
+
+app.deployment_file_location = 'deployment/to_deploy_folder'
+repository_URL = "http://"+sys.argv[1]
+
+def get_ip_port(module_name):
+    custom_URL = repository_URL+"/get_running_ip/"+module_name
+    r=requests.get(url=custom_URL).content
+    r = r.decode('utf-8')
+    print(r)
+    return r
+
+def get_Server_Configuration():
+    global kafka_IP_plus_port 
+    kafka_IP_plus_port = get_ip_port("Kafka_Service")
+
+    if __debug__:
+        print(" Kafka IP and Port",kafka_IP_plus_port)
+    
+    global request_manager_ip_port
+    request_manager_ip_port = get_ip_port("Request_Manager_Application")
+    
+    if __debug__:
+        print(" request_manager_ip_port ",request_manager_ip_port)
+
+def get_ip_and_port(socket):
+    ip_port_temp = socket.split(':')
+    print(ip_port_temp)
+    return ip_port_temp[0],ip_port_temp[1]
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=9001,debug=True,threaded=True)
+    get_Server_Configuration()
+    request_ip,request_port = get_ip_and_port(request_manager_ip_port)
+
+    if __debug__:
+        print("Request Manager IP Port ",request_ip,request_port)
+
+    app.run(host=request_ip,port=int(request_port),debug=True,threaded=True)
 

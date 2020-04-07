@@ -5,23 +5,25 @@ from flask import render_template
 from flask import request
 from flask import jsonify
 from flask import abort
-import json
+import json,requests
 import random
 import time
-server_config = 'servers.json'
-service_config = 'services.json'
-import sys
-
 import os
 
-argument_list = sys.argv
+server_config = os.getcwd()+"/LoadBalancer/servers.json"
+service_config = os.getcwd()+"/LoadBalancer/services.json"
+import sys
+
+
+
+'''argument_list = sys.argv
 kafka_ip = argument_list[1]
 ip = argument_list[2]
 port = argument_list[3]
 host_url = ip + ":" + str(port)
 
 print("kafka_ip ",kafka_ip)
-print("host_url ",host_url)
+print("host_url ",host_url)'''
 
 class Service:
     def __init__(self, serviceName,serviceInstances):
@@ -174,6 +176,48 @@ def register_services(module_name,ip,port):
 def get_all_services():
     return jsonify(load_balancer.getAllServices())
 
+
+global kafka_IP_plus_port
+global load_balancer_ip_port
+
+kafka_IP_plus_port = None
+load_balancer_ip_port = None
+
+app.deployment_file_location = 'deployment/to_deploy_folder'
+repository_URL = "http://"+sys.argv[1]
+
+def get_ip_port(module_name):
+    custom_URL = repository_URL+"/get_running_ip/"+module_name
+    r=requests.get(url=custom_URL).content
+    r = r.decode('utf-8')
+    print(r)
+    return r
+
+def get_Server_Configuration():
+    global kafka_IP_plus_port 
+    kafka_IP_plus_port = get_ip_port("Kafka_Service")
+
+    if __debug__:
+        print(" Kafka IP and Port",kafka_IP_plus_port)
+    
+    global load_balancer_ip_port
+    load_balancer_ip_port = get_ip_port("LoadBalancer_Service")
+    
+    if __debug__:
+        print(" load_balancer_ip_port ",load_balancer_ip_port)
+
+def get_ip_and_port(socket):
+    ip_port_temp = socket.split(':')
+    print(ip_port_temp)
+    return ip_port_temp[0],ip_port_temp[1]
+
 if __name__ == '__main__':
-    print ('STARTED LOAD BALANCER')
-    app.run(debug=True, host='0.0.0.0',port=port)
+
+    print (' Initiating Load Balancer ')
+    get_Server_Configuration()
+    lb_ip,lb_port = get_ip_and_port(load_balancer_ip_port)
+
+    if __debug__:
+        print("lb_ip,lb_port",lb_ip,lb_port)
+
+    app.run(debug=True, host=lb_ip,port=int(lb_port))
