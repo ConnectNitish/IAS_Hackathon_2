@@ -25,9 +25,9 @@ def start_service(ip,port,module_name):
         reponse = requests.get('http://{}:{}/start/{}'.format(ip,port,module_name)).content
         reponse = json.loads(reponse.decode('utf-8'))
 
-        if reponse["status"] == "success":
-            reponse["status"] = requests.get('http://{}:{}/register/{}/{}/{}'.
-                format(load_balancer_ip,load_balancer_port,module_name,ip,response["port"])).content.decode("utf-8")
+        # if reponse["status"] == "success":
+        #     reponse["status"] = requests.get('http://{}:{}/register/{}/{}/{}'.
+        #         format(load_balancer_ip,load_balancer_port,module_name,ip,response["port"])).content.decode("utf-8")
 
         return reponse["status"]
     except Exception as e:
