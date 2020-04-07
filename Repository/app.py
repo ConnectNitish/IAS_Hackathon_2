@@ -38,7 +38,7 @@ class Registry:
 
 @app.route('/')
 def landingPage():
-    return "You are at Registry module"
+    return "You are at Repository module"
 
 @app.route('/start/<ip>/<port>/<module_name>', methods=['GET'])
 def start_service(ip,port,module_name):

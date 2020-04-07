@@ -20,6 +20,8 @@ def landingPage():
 @app.route('/start/<ip>/<port>/<module_name>', methods=['GET'])
 def start_service(ip,port,module_name):
 
+    print("Inside start_service deployment 99999999999999999999999999")
+
     try:
         print(module_name,ip,port)
         reponse = requests.get('http://{}:{}/start/{}'.format(ip,port,module_name)).content
