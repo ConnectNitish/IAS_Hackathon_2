@@ -41,10 +41,7 @@ class Service:
         return self.serviceName
     def getRunningInstances(self):
         return self.serviceInstances
-    
-    
-
-    
+      
 class Server:
     ID = 0
     def __init__(self, serverIP, username, password):
@@ -89,7 +86,6 @@ class Server:
     def getServerIP(self):
         return self.serverIP
     
-
 class LoadBalancer:
     def __init__(self, server_config, service_config):
         self.servers = {}
@@ -162,9 +158,16 @@ load_balancer = LoadBalancer(server_config, service_config)
 
 
 app = Flask(__name__)
+
 @app.route('/')
 def index():
     return 'Load balancer'
+
+@app.route('/register/<module_name>/<ip>/<port>')
+def register_services(module_name,ip,port):
+    pass
+
+
 
 @app.route('/get_all_services')
 def get_all_services():
