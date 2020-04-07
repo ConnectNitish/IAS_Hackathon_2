@@ -1,8 +1,6 @@
 import os,errno
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file,session
 from flask_bootstrap import Bootstrap
-# from Summarizer import Summarizer
-# from Lang import Lang
 import sys
 
 app = Flask(__name__)
@@ -40,4 +38,4 @@ def index():
 
 
 if __name__=='__main__':
-    app.run(host="0.0.0.0",debug=True,port=3000)
+    app.run(host="0.0.0.0",debug=True,port=3000,threaded=True)
