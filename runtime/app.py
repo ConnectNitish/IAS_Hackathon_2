@@ -11,8 +11,9 @@ app.debug = True
 app.secret_key = os.urandom(24)
 bootstrap = Bootstrap(app)
 
-module_port_int = 3000
+module_port_int = 8100
 module_name_id_map = {}
+module_name_id_map_filepath = os.getcwd()+"/module_name_id_map.json"
 
 def get_free_port():
     tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,11 +23,11 @@ def get_free_port():
     return port
 
 def save_data():
-    with open('module_name_id_map.json', 'w') as fp:
-        json.dump(module_name_id_map, fp)
+    with open(module_name_id_map_filepath, 'w') as fp:
+        json.dump(module_name_id_map, fp, indent=4, sort_keys=True)
 
 def load_data():
-    with open('module_name_id_map.json', 'r') as fp:
+    with open(module_name_id_map_filepath, 'r') as fp:
         module_name_id_map = json.load(fp)
     print(module_name_id_map)
 
@@ -42,6 +43,12 @@ def start_module(module_name):
     try:
         module_port = get_free_port()
         print("module_port: ",module_port)
+
+        response["service_port"] = str(module_port)
+        response["machine_port"] = "3000"
+        response["service_ip"] = "0.0.0.0"
+        response["machine_ip"] = "127.0.0.1"
+
         container_id = ""
         os.system("sudo docker run -p {}:{} -d {} > output.txt".format(module_port,module_port_int,module_name))
 
@@ -61,10 +68,13 @@ def start_module(module_name):
         os.system("sudo docker ps -a")
         print('{} module deployed'.format(module_name))
         
-        module_name_id_map[module_name] = container_id
+        module_name_id_map[container_id[:20]] = {
+        "container_id":container_id,
+        "module_name":module_name
+        }
         save_data()
 
-        response["port"] = module_port
+        response["uid"] = container_id[:20]
         response["status"] = "success"
         return jsonify(response)
     
@@ -74,12 +84,12 @@ def start_module(module_name):
         return jsonify(response)
 
 @app.route('/stop/<module_name>', methods=['GET'])
-def stop_module(module_name):
+def stop_module(module_id):
 
     try:
         load_data()
-        container_id = module_name_id_map[module_name]
-        module_name_id_map.pop(module_name)
+        container_id = module_name_id_map[module_id]["container_id"]
+        module_name_id_map.pop(module_id)
         save_data()
         os.system("sudo docker stop {}".format(container_id))
         os.system("sudo docker rm {}".format(container_id))
@@ -93,7 +103,7 @@ def stop_module(module_name):
         print("output: ",container_id)
 
         os.system("sudo docker ps -a")
-        print('{} module stoped'.format(module_name))
+        print('{} module with id {} stoped'.format(module_name,module_id))
 
         return "success"
     except Exception as e:

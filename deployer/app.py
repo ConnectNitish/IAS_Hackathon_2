@@ -10,8 +10,15 @@ app.debug = True
 app.secret_key = os.urandom(24)
 bootstrap = Bootstrap(app)
 
-load_balancer_ip = "127.0.0.1"
-load_balancer_port = "7000"
+global kafka_IP_plus_port
+global Deployment_Service_ip_port
+global Loadbalancer_ip_port
+
+kafka_IP_plus_port = None
+Deployment_Service_ip_port = None
+Loadbalancer_ip_port = None
+
+repository_URL = "http://"+sys.argv[1]
 
 @app.route('/')
 def landingPage():
@@ -20,18 +27,20 @@ def landingPage():
 @app.route('/start/<ip>/<port>/<module_name>', methods=['GET'])
 def start_service(ip,port,module_name):
 
-    print("Inside start_service deployment 99999999999999999999999999")
-
     try:
         print(module_name,ip,port)
-        reponse = requests.get('http://{}:{}/start/{}'.format(ip,port,module_name)).content
-        reponse = json.loads(reponse.decode('utf-8'))
+        response = requests.get('http://{}:{}/start/{}'.format(ip,port,module_name)).content
+        response = json.loads(response.decode('utf-8'))
 
-        # if reponse["status"] == "success":
-        #     reponse["status"] = requests.get('http://{}:{}/register/{}/{}/{}'.
-        #         format(load_balancer_ip,load_balancer_port,module_name,ip,response["port"])).content.decode("utf-8")
+        load_balancer_ip ,load_balancer_port = get_ip_and_port(Loadbalancer_ip_port)
+        
+        if response["status"] == "success":
+            response["status"] = requests.get('http://{}:{}/register/{}/{}/{}/{}/{}/{}'.
+                format(load_balancer_ip,load_balancer_port,module_name,ip,response["service_ip"],
+                       response["service_port"],response["machine_port"],response["uid"])).content.decode("utf-8")
+            print("inside: ",response)
 
-        return reponse["status"]
+        return response["status"]
     except Exception as e:
         print(e)
         return "failure"
@@ -39,23 +48,12 @@ def start_service(ip,port,module_name):
 
 @app.route('/stop/<ip>/<port>/<module_name>', methods=['GET'])
 def stop_service(ip,port,module_name):
-
     try:
         print(module_name,ip,port)
         return requests.get('http://{}:{}/stop/{}'.format(ip,port,module_name)).content.decode("utf-8")
     except Exception as e:
         print(e)
         return "failure"
-
-
-global kafka_IP_plus_port
-global Deployment_Service_ip_port
-
-kafka_IP_plus_port = None
-Deployment_Service_ip_port = None
-import requests 
-
-repository_URL = "http://"+sys.argv[1]
 
 def get_ip_port(module_name):
     custom_URL = repository_URL+"/get_running_ip/"+module_name
@@ -73,6 +71,9 @@ def get_Server_Configuration():
     
     global Deployment_Service_ip_port
     Deployment_Service_ip_port = get_ip_port("Deployment_Service")
+
+    global Loadbalancer_ip_port
+    Loadbalancer_ip_port = get_ip_port("LoadBalancer_Service")
     
     if __debug__:
         print(" Deployment_Service_ip_port ",Deployment_Service_ip_port)

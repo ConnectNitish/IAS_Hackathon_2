@@ -1,4 +1,4 @@
-from flask import Flask,request, render_template,redirect,url_for,session
+from flask import Flask,request, render_template,redirect,url_for,session,jsonify
 from werkzeug.utils import secure_filename
 import os,json
 from threading import Thread
@@ -55,35 +55,22 @@ def Deployment_Interface():
 def getServiceInstancesDetails():
     
     load_balancer_ip_port = get_ip_port("LoadBalancer_Service")
-    r=requests.get(url="http://"+load_balancer_ip_port+"/get_all_services")
-    
-    data = r.json()
-    print("response from Rest API")
-    print(data)
-
-    response={}
-    response = data
-
+    response=requests.get(url="http://"+load_balancer_ip_port+"/get_all_services").content
+    response = json.loads(response.decode('utf-8'))
     return render_template('Service_Instances.html',data=response)
 
 @app.route('/Start_Deployment',methods=['GET','POST'])
 def add_deployment_details():
+
     is_deployment_done = False
-    
-    print("%%%%%%%%%%%")
-    # print(request.form)
 
     key_IP_Address = 'IP_Address'
     key_port_number = 'port_number'
     key_service_type = 'service_type'
 
-
     input_IP_Address = request.form[key_IP_Address]
     input_port_number = request.form[key_port_number]
     input_service_type = request.form.get(key_service_type)
-
-    print("##################################################")
-    print(input_IP_Address,input_port_number,input_service_type)
 
     response = {}
 
@@ -129,7 +116,6 @@ def add_deployment_details():
 
     return render_template('Deployment_Interface.html',data=response)
 
-
 def get_ip_port(module_name):
     custom_URL = repository_URL+"/get_running_ip/"+module_name
     r=requests.get(url=custom_URL).content
@@ -152,7 +138,6 @@ def get_Server_Configuration():
     
     if __debug__:
         print(" request_manager_ip_port ",request_manager_ip_port)
-
 
 def get_ip_and_port(socket):
     ip_port_temp = socket.split(':')

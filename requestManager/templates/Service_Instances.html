@@ -61,19 +61,23 @@
           <table class="table table-dark">
             <thead>
               <tr >
+                <th scope="col" > Service Id </th>
                 <th scope="col" > Service Name </th>
-                <th scope="col"> Instances </th>
+                <th scope="col"> Service IP </th>
+                <th scope="col"> Service Port </th>
+                <th scope="col"> Machine IP </th>
+                <th scope="col"> Machine Port </th>
               </tr>
             </thead>
             <tbody>
-            {% for item in data['services'] %}
+            {% for item, val in data.items() %}
             <tr>
-                  <th scope="row"><label> {{ item['serviceName'] }} </label></th>
-                  <td>
-                  {% for item_ins in item['instances'] %}
-                    <label> {{ item_ins['serverIP'] }} </label>
-                  {% endfor %}
-                  </td>
+                  <th scope="row"><label> {{ val['uid'] }} </label></th>
+                  <th scope="row"><label> {{ val['module_name'] }} </label></th>
+                  <th scope="row"><label> {{ val['service_ip'] }} </label></th>
+                  <th scope="row"><label> {{ val['service_port'] }} </label></th>
+                  <th scope="row"><label> {{ val['machine_ip'] }} </label></th>
+                  <th scope="row"><label> {{ val['machine_port'] }} </label></th>
             </tr>
             {% endfor %}
             </tbody>
@@ -81,9 +85,6 @@
         </table>
 
         </div>
-
-        <!-- </form> -->
-
     </div>
   </div>
   </div>
