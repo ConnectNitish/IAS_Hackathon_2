@@ -91,4 +91,4 @@ if __name__ == '__main__':
     if __debug__:
         print("Deployment_Service_ip,Deployment_Service_port",Deployment_Service_ip,Deployment_Service_port)
 
-    app.run(host=Deployment_Service_ip,debug=True,port=int(Deployment_Service_port),threaded=True)
+    app.run(host=Deployment_Service_ip,debug=False,port=int(Deployment_Service_port),threaded=True)

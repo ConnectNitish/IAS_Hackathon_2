@@ -1,1 +1,1 @@
-kombu
+pip3 install -U logzero
