@@ -100,5 +100,46 @@ def stop_module(module_name):
         print(e)
         return "failure"
 
+global kafka_IP_plus_port
+global runtime_application_ip_port
+
+kafka_IP_plus_port = None
+runtime_application_ip_port = None
+
+app.deployment_file_location = 'deployment/to_deploy_folder'
+repository_URL = "http://"+sys.argv[1]
+
+def get_ip_port(module_name):
+    custom_URL = repository_URL+"/get_running_ip/"+module_name
+    r=requests.get(url=custom_URL).content
+    r = r.decode('utf-8')
+    print(r)
+    return r
+
+def get_Server_Configuration():
+    global kafka_IP_plus_port 
+    kafka_IP_plus_port = get_ip_port("Kafka_Service")
+
+    if __debug__:
+        print(" Kafka IP and Port",kafka_IP_plus_port)
+    
+    global runtime_application_ip_port
+    runtime_application_ip_port = get_ip_port("Runtime_Application")
+    
+    if __debug__:
+        print(" runtime_application_ip_port ",runtime_application_ip_port)
+
+def get_ip_and_port(socket):
+    ip_port_temp = socket.split(':')
+    print(ip_port_temp)
+    return ip_port_temp[0],ip_port_temp[1]
+
 if __name__=='__main__':
+    
+    get_Server_Configuration()
+    runtime_application_ip,runtime_application_port = get_ip_and_port(runtime_application_ip_port)
+
+    if __debug__:
+        print(" runtime_application_ip,runtime_application_port ",runtime_application_ip,runtime_application_port)
+
     app.run(host="127.0.0.1",debug=True,port=3000,threaded=True)
