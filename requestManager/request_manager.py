@@ -442,6 +442,33 @@ def Deployment_Interface():
     prepare_and_send_log_message("Request_Manager","Deployment_Interface","Call to Page")
     return render_template('Deployment_Interface.html',data=response)
 
+@app.route('/Live_Service_Instances')
+def getServiceInstancesDetails():
+    response = {}
+
+    response['all_live_service'] = [
+    {
+    'serviceName':'deploymentService','instances':['127.0.0.1:1234','127.0.0.1:23456']
+    },
+    {
+    'serviceName':'SchedulerService','instances':['127.0.0.1:99999','127.0.0.1:99998']
+    },
+    ]
+
+    r=requests.get(url="http://0.0.0.0:8001/get_all_services")
+    # print(r)
+    data = r.json()
+    print("response from Rest API")
+    print(data)
+
+    response={}
+    response = data
+
+    # print(response)
+
+    # make a call to API of load balancer 
+    return render_template('Service_Instances.html',data=response)
+
 @app.route('/Start_Deployment',methods=['GET','POST'])
 def add_deployment_details():
     is_deployment_done = False

@@ -1,0 +1,15 @@
+{
+	"servers": [
+		{
+			"serverIP": "localhost:7001",
+			"username": "chitta",
+			"password": "xyz"
+		},
+		{
+			"serverIP": "localhost:7002",
+			"username": "chitta",
+			"password": "xyz"
+		}
+		
+	]
+}

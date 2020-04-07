@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Inference</title>
+  <title>Application</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -38,18 +38,22 @@
 
 <div class="container-fluid">
   <div class="row content">
-    <div class="col-sm-2 sidenav">
-      <h3>Psudeo Topology Manager</h3>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="/">Home</a></li>
-        <li><a href="/Deployment_Interface" class="active">Deployment Interface</a></li>
-      </ul><br>
-    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="nav nav-pills">
+          <li><a href="/">Deployment Manager System</a></li>
+          <li><a href="/Deployment_Interface" class="active">Deployment Interface</a></li>
+          <li><a href="/Live_Service_Instances">Service Instances</a></li>
+        </ul>
+      </div>
+    </nav>
 
     <div class="col-sm-7">
-      <h4><small>Deploy Platform Service</small></h4>
-      <hr>
-      <h4>Configuration Details</h4>
+<!--       <h4><small>Deploy Platform Service</small></h4>
+      <hr> -->
+        <h4>Configuration Details for Deployment</h4>
+        <hr>
 
         <form action="/Start_Deployment" method="post">
           
