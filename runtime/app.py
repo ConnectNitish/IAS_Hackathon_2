@@ -152,4 +152,4 @@ if __name__=='__main__':
     if __debug__:
         print(" runtime_application_ip,runtime_application_port ",runtime_application_ip,runtime_application_port)
 
-    app.run(host=runtime_application_ip,debug=False,port=int(runtime_application_port),threaded=True)
+    app.run(host=runtime_application_ip,debug=True,port=int(runtime_application_port),threaded=True)

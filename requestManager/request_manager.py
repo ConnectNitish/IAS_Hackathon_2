@@ -80,20 +80,20 @@ def add_deployment_details():
 
     url_path_counter = app.deployment_file_location + "/to_deploy_file_Counter.txt"
     request_number = None
-    try:
-        with open(url_path_counter, 'r') as fp:
-            request_number = int(fp.read())
-    except FileNotFoundError:
-        print("File Not Found")
-        request_number = 0
-        pass
+    # try:
+    #     with open(url_path_counter, 'r') as fp:
+    #         request_number = int(fp.read())
+    # except FileNotFoundError:
+    #     print("File Not Found")
+    #     request_number = 0
+    #     pass
 
-    url_path = app.deployment_file_location + "/to_deploy_file_"+ str(request_number + 1) +".json"
-    with open(url_path, 'a+') as fp:
-        json.dump(response, fp)
+    # url_path = app.deployment_file_location + "/to_deploy_file_"+ str(request_number + 1) +".json"
+    # with open(url_path, 'a+') as fp:
+    #     json.dump(response, fp)
 
-    with open(url_path_counter, 'w') as fp:
-        fp.write(str(request_number + 1))
+    # with open(url_path_counter, 'w') as fp:
+    #     fp.write(str(request_number + 1))
 
     deployment_ip,deployment_port = get_ip_and_port(deployment_ip_port)
     # print(deployment_ip,deployment_port)
@@ -151,5 +151,5 @@ if __name__ == '__main__':
     if __debug__:
         print("Request Manager IP Port ",request_ip,request_port)
 
-    app.run(host=request_ip,port=int(request_port),debug=False,threaded=True)
+    app.run(host=request_ip,port=int(request_port),debug=True,threaded=True)
 

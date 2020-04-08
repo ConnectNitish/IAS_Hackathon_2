@@ -23,6 +23,14 @@
         "service_port": "42129",
         "uid": "36b69621a5464b79f8c4"
     },
+    "4ff6e2f4552c1365a705": {
+        "machine_ip": "127.0.0.1",
+        "machine_port": "3000",
+        "module_name": "actnotif",
+        "service_ip": "0.0.0.0",
+        "service_port": "36685",
+        "uid": "4ff6e2f4552c1365a705"
+    },
     "521b7bea070d8cd7a692": {
         "machine_ip": "127.0.0.1",
         "machine_port": "3000",
