@@ -1,74 +1,18 @@
 {
-    "18ba6b35579a8f175f36": {
+    "4022fef281134aef80f9": {
         "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "loadbalancer",
-        "service_ip": "127.0.0.1",
-        "service_port": "50133",
-        "uid": "18ba6b35579a8f175f36"
-    },
-    "18e03d5e27fc90ffc7e1": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "sum",
-        "service_ip": "127.0.0.1",
-        "service_port": "59027",
-        "uid": "18e03d5e27fc90ffc7e1"
-    },
-    "36b69621a5464b79f8c4": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "sum",
-        "service_ip": "127.0.0.1",
-        "service_port": "42129",
-        "uid": "36b69621a5464b79f8c4"
-    },
-    "4ff6e2f4552c1365a705": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "actnotif",
-        "service_ip": "0.0.0.0",
-        "service_port": "36685",
-        "uid": "4ff6e2f4552c1365a705"
-    },
-    "521b7bea070d8cd7a692": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
+        "machine_port": "9000",
         "module_name": "scheduler",
         "service_ip": "0.0.0.0",
-        "service_port": "41147",
-        "uid": "521b7bea070d8cd7a692"
+        "service_port": "39479",
+        "uid": "4022fef281134aef80f9"
     },
-    "608dfef7afd9a0c28ef1": {
+    "bc4b9f03bb285309d037": {
         "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
+        "machine_port": "9000",
         "module_name": "actnotif",
         "service_ip": "0.0.0.0",
-        "service_port": "50323",
-        "uid": "608dfef7afd9a0c28ef1"
-    },
-    "810727daa2d98c906d7f": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "sum",
-        "service_ip": "127.0.0.1",
-        "service_port": "33393",
-        "uid": "810727daa2d98c906d7f"
-    },
-    "b9efcde51e26e25428d5": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "sum",
-        "service_ip": "127.0.0.1",
-        "service_port": "45725",
-        "uid": "b9efcde51e26e25428d5"
-    },
-    "e8b464dae96d0c37a811": {
-        "machine_ip": "127.0.0.1",
-        "machine_port": "3000",
-        "module_name": "sum",
-        "service_ip": "127.0.0.1",
-        "service_port": "43437",
-        "uid": "e8b464dae96d0c37a811"
+        "service_port": "45925",
+        "uid": "bc4b9f03bb285309d037"
     }
 }

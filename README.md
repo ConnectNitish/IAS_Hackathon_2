@@ -23,13 +23,13 @@ Setting Up Docker :
 
 ------------------------------
 
->> NEW ( All Module will be up , not needed to run old script if ran )
+( All Module will be up , not needed to run old script if ran )
 <br />
-python3 boot_strap.py 127.0.0.1:9939
+sudo python3 boot_strap.py 127.0.0.1:9939
 
 ------------------------------
 <br />
->> OLD ( For Individual Module )
+( For Individual Module )
 <br />
 For Running Repository.py 
 

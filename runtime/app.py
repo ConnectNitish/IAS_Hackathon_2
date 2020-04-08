@@ -12,9 +12,23 @@ app.debug = True
 app.secret_key = os.urandom(24)
 bootstrap = Bootstrap(app)
 
+global kafka_IP_plus_port
+global runtime_application_ip_port
+global repository_ip_port
+
+kafka_IP_plus_port = None
+runtime_application_ip_port = None
+repository_ip_port = None
+
+app.deployment_file_location = 'deployment/to_deploy_folder'
+repository_URL = "http://"+sys.argv[1]
+
 module_port_int = 8100
 module_name_id_map = {}
-module_name_id_map_filepath = os.getcwd()+"/module_name_id_map.json"
+module_name_port_map = {}
+module_name_id_map_filepath = os.getcwd()+"/runtime/module_name_id_map.json"
+module_name_port_map_filepath = os.getcwd()+"/runtime/module_name_port_map.json"
+docker_filepath_prefix = os.getcwd()+"/runtime/"
 
 def get_free_port():
     tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,6 +46,13 @@ def load_data():
         module_name_id_map = json.load(fp)
     print(module_name_id_map)
 
+def load_module_internal_port(module_name):
+    with open(module_name_port_map_filepath, 'r') as fp:
+        module_name_port_map = json.load(fp)
+
+    print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+    print(module_name_port_map)
+    return module_name_port_map[module_name]
 
 @app.route('/')
 def landingPage():
@@ -39,19 +60,30 @@ def landingPage():
 
 @app.route('/start/<module_name>', methods=['GET'])
 def start_module(module_name):
-
     response = {}
     try:
         module_port = get_free_port()
+        
+        module_port_int = load_module_internal_port(module_name)
+        
         print("module_port: ",module_port)
+        print("module_port_int: ",module_port_int)
 
+        runtime_application_ip,runtime_application_port = get_ip_and_port(runtime_application_ip_port)
         response["service_port"] = str(module_port)
-        response["machine_port"] = "3000"
+        response["machine_port"] = runtime_application_port
         response["service_ip"] = "0.0.0.0"
-        response["machine_ip"] = "127.0.0.1"
+        response["machine_ip"] = runtime_application_ip
+
+        repository_ip,repository_port = get_ip_and_port(repository_ip_port)
+
+        os.system("sudo rm {}.tar".format(module_name))
+        os.system("wget http://{}:{}/download/{}.tar".format(repository_ip,repository_port,module_name))
+        os.system("mv {}.tar {}{}.tar".format(module_name,docker_filepath_prefix,module_name))
+        os.system("sudo docker load < {}{}.tar".format(docker_filepath_prefix,module_name))
+        os.system("sudo docker run -p {}:{} -d {} > output.txt".format(module_port,module_port_int,module_name))
 
         container_id = ""
-        os.system("sudo docker run -p {}:{} -d {} > output.txt".format(module_port,module_port_int,module_name))
 
         if os.path.exists('output.txt'):
             fp = open('output.txt', "r")
@@ -111,15 +143,6 @@ def stop_module(module_id):
         print(e)
         return "failure"
 
-global kafka_IP_plus_port
-global runtime_application_ip_port
-
-kafka_IP_plus_port = None
-runtime_application_ip_port = None
-
-app.deployment_file_location = 'deployment/to_deploy_folder'
-repository_URL = "http://"+sys.argv[1]
-
 def get_ip_port(module_name):
     custom_URL = repository_URL+"/get_running_ip/"+module_name
     r=requests.get(url=custom_URL).content
@@ -137,6 +160,9 @@ def get_Server_Configuration():
     global runtime_application_ip_port
     runtime_application_ip_port = get_ip_port("Runtime_Application")
     
+    global repository_ip_port
+    repository_ip_port = get_ip_port("Repository_Service")
+
     if __debug__:
         print(" runtime_application_ip_port ",runtime_application_ip_port)
 
@@ -146,6 +172,7 @@ def get_ip_and_port(socket):
     return ip_port_temp[0],ip_port_temp[1]
 
 if __name__=='__main__':
+
     get_Server_Configuration()
     runtime_application_ip,runtime_application_port = get_ip_and_port(runtime_application_ip_port)
 

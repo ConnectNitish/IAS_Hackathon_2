@@ -48,7 +48,7 @@ def Deployment_Interface():
     response["deployment_done"] = is_deployment_done
     print(response)
     print('Logging Request to Logger**')
-    prepare_and_send_log_message("Request_Manager","Deployment_Interface_warning","Empty Data is Sent",kafka_IP_plus_port)
+    prepare_and_send_log_message("Request_Manager","Deployment_Interface_warning","Deployment Service is up",kafka_IP_plus_port)
     return render_template('Deployment_Interface.html',data=response)
 
 @app.route('/Live_Service_Instances')
@@ -110,7 +110,7 @@ def add_deployment_details():
     response["deployment_done"] = is_deployment_done
 
     print('Logging Request to Logger For Success Deployment')
-    prepare_and_send_log_message("Logging","Start_Deployment_info",response,kafka_IP_plus_port)
+    prepare_and_send_log_message("Request_Manager","Start_Deployment_info",response,kafka_IP_plus_port)
 
     print(response)
 
